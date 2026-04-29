@@ -10,7 +10,10 @@ from collections.abc import Sequence
 
 import sqlalchemy as sa
 from alembic import op
+import os
 from pgvector.sqlalchemy import Vector
+
+VECTOR_DIMENSIONS = int(os.getenv("VECTOR_DIMENSIONS", 1536))
 
 from migrations.utils import index_exists, table_exists
 from src.config import settings
@@ -28,7 +31,7 @@ def upgrade() -> None:
         "message_embeddings",
         sa.Column("id", sa.BigInteger(), sa.Identity(), nullable=False),
         sa.Column("content", sa.Text(), nullable=False),
-        sa.Column("embedding", Vector(1536), nullable=False),
+        sa.Column("embedding", Vector(VECTOR_DIMENSIONS), nullable=False),
         sa.Column("message_id", sa.Text(), nullable=False),
         sa.Column("workspace_name", sa.Text(), nullable=False),
         sa.Column("session_name", sa.Text(), nullable=True),

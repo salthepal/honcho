@@ -22,7 +22,10 @@ from collections.abc import Sequence
 
 import sqlalchemy as sa
 from alembic import op
+import os
 from pgvector.sqlalchemy import Vector
+
+VECTOR_DIMENSIONS = int(os.getenv("VECTOR_DIMENSIONS", 1536))
 
 from migrations.utils import column_exists, constraint_exists, get_schema, index_exists
 
@@ -42,7 +45,7 @@ def upgrade() -> None:
     op.alter_column(
         "message_embeddings",
         "embedding",
-        existing_type=Vector(1536),
+        existing_type=Vector(VECTOR_DIMENSIONS),
         nullable=True,
         schema=schema,
     )
@@ -50,7 +53,7 @@ def upgrade() -> None:
     op.alter_column(
         "documents",
         "embedding",
-        existing_type=Vector(1536),
+        existing_type=Vector(VECTOR_DIMENSIONS),
         nullable=True,
         schema=schema,
     )

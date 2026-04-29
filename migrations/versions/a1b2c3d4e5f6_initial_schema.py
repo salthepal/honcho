@@ -10,7 +10,10 @@ from collections.abc import Sequence
 
 import sqlalchemy as sa
 from alembic import op
+import os
 from pgvector.sqlalchemy import Vector
+
+VECTOR_DIMENSIONS = int(os.getenv("VECTOR_DIMENSIONS", 1536))
 from sqlalchemy.dialects import postgresql
 
 from src.config import settings
@@ -363,7 +366,7 @@ def upgrade() -> None:
             server_default="{}",
         ),
         sa.Column("content", sa.Text(), nullable=False),
-        sa.Column("embedding", Vector(1536), nullable=True),  # pyright: ignore
+        sa.Column("embedding", Vector(VECTOR_DIMENSIONS), nullable=True),  # pyright: ignore
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
